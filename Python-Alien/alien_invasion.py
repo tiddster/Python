@@ -1,8 +1,11 @@
 import sys
 import pygame
+from time import sleep
+
 from settings import Setting
 from bullet import Bullet
 from ship import Ship
+from GameState import GameStates
 from alien import Alien
 
 class AlienInvasion:
@@ -19,6 +22,9 @@ class AlienInvasion:
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
+
+        #创建一个用于储存游戏统计信息的实例
+        self.stats = GameStates(self)
     
     def run_game(self):
         """开始游戏的主循环"""
@@ -29,7 +35,6 @@ class AlienInvasion:
             self._update_bullets()
             self._update_aliens()
             self._create_fleet()
-
 
     def _check_events(self):
         '''键盘、鼠标响应事件'''
@@ -95,7 +100,7 @@ class AlienInvasion:
         self.aliens.update()
 
         if pygame.sprite.spritecollideany(self.ship,self.aliens):
-            print("ship hit!!")
+            self._ship_hit()
         
     def _check_fleet_edges(self):                            #检测是否在边缘
         for alien in self.aliens.sprites():
@@ -103,6 +108,16 @@ class AlienInvasion:
                 self.settings.fleet_direction *= -1
                 break
 
+    def _ship_hit(self):
+        self.stats.ships_left -= 1
+
+        self.aliens.empty()
+        self.bullets.empty()
+
+        self._create_fleet()
+        self.ship.center_ship()
+
+        sleep(1)
 
 if __name__ == '__main__':
     ai = AlienInvasion()
