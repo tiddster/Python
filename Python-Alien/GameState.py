@@ -5,8 +5,11 @@ class GameStates:
 
         self.game_activity = True
 
+        self.high_score = 0
+
     def reset_stats(self):
         self.ships_left = self.settings.ship_limit
         self.killed_number = 0
         self.score = 0
+        self.level = 1
         

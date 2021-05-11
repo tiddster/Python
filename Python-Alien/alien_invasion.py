@@ -54,6 +54,9 @@ class AlienInvasion:
                 self.settings.difficulty(self.settings.speed_up)           #赋予新的难度
 
                 self.stats.killed_number = 0                               #重置击杀次数
+                self.stats.level += 1
+                self.sb.prep_level()
+                self.sb.show_level()
 
                 self.aliens.empty()
                 self.bullets.empty()
@@ -81,8 +84,7 @@ class AlienInvasion:
 
         self.ship.blitme()
 
-        self.sb.prep_score()
-        self.sb.show_score()
+        self.sb.prep_and_show()
 
         for bullet in self.bullets.sprites():         #绘制子弹
             if bullet.rect.bottom <= 0:
@@ -129,6 +131,7 @@ class AlienInvasion:
         if collisions:
             self.stats.killed_number += 1
             self.stats.score += 1
+            self.sb.checK_high_score()
 
     def _create_fleet(self):                            #创建外星人
         if len(self.aliens) < self.settings.alien_allowed:
@@ -150,6 +153,7 @@ class AlienInvasion:
 
     def _ship_hit(self):
         self.stats.ships_left -= 1
+        self.sb.prep_lives()
 
         if self.stats.ships_left > 0:
             self.aliens.empty()
@@ -170,9 +174,9 @@ class AlienInvasion:
 
     def start_game(self):
         self.settings.speed_up = 1
-        self.settings.difficulty(self.settings.speed_up)
+        self.settings.difficulty(self.settings.speed_up)            #重置难度
 
-        self.stats.game_activity = True
+        self.stats.game_activity = True                         #游戏活跃
         self.stats.reset_stats()
 
         self.aliens.empty()
