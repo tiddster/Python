@@ -1,8 +1,13 @@
 import pygame.font
 
+from pygame.sprite import Group
+
+from ship import Ship
+
 class Scoreboard:
 
     def __init__(self,ai_game):
+        self.ai_game = ai_game
         self.screen = ai_game.screen
         self.screen_rect = ai_game.screen.get_rect()
         self.settings = ai_game.settings
@@ -22,15 +27,15 @@ class Scoreboard:
 
         self.score_rect = self.score_image.get_rect()
         self.score_rect.right= self.screen_rect.right - 20
-        self.score_rect.top = 20
+        self.score_rect.top = 50
     
     def prep_high_score(self):
         high_score = "Highest: " + str(self.stats.high_score)
         self.high_score_image = self.font.render(high_score,True,self.text_color,self.settings.bg_color)
 
         self.high_score_rect = self.high_score_image.get_rect()
-        self.high_score_rect.left = self.screen_rect.left + 20
-        self.high_score_rect.top = 20
+        self.high_score_rect.right= self.screen_rect.right - 20
+        self.high_score_rect.top = 10
     
     def prep_level(self):
         level = "Level: " + str(self.stats.level)
@@ -41,12 +46,13 @@ class Scoreboard:
         self.level_rect.top = 20
 
     def prep_lives(self):
-        lives = "Lives: " + str(self.stats.ships_left)
-        self.lives_image = self.font.render(lives,True,self.text_color,self.settings.bg_color)
+        self.ships = Group()
 
-        self.lives_image_rect = self.lives_image.get_rect()
-        self.lives_image_rect.center = self.screen_rect.center
-        self.lives_image_rect.top = 50
+        for ship_number in range(self.stats.ships_left):
+            ship = Ship(self.ai_game)
+            ship.rect.x = 10 + ship_number*ship.rect.width
+            ship.rect.y = 10
+            self.ships.add(ship)
 
     def show_score(self):
         self.screen.blit(self.score_image,self.score_rect)
@@ -58,7 +64,7 @@ class Scoreboard:
         self.screen.blit(self.level_image,self.level_rect)
 
     def show_lives(self):
-        self.screen.blit(self.lives_image,self.lives_image_rect)
+        self.ships.draw(self.screen)
 
     def checK_high_score(self):
         if self.stats.score > self.stats.high_score:
