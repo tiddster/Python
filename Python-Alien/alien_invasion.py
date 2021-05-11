@@ -35,6 +35,8 @@ class AlienInvasion:
         self.play_button = Button(self,"Play")
 
         self.sb = Scoreboard(self)
+
+        self.text_read()
     
     def run_game(self):
         """开始游戏的主循环"""
@@ -114,6 +116,7 @@ class AlienInvasion:
         elif event.key == pygame.K_LEFT:              #摁左箭头向左走
             self.ship.moving_left = True
         elif event.key == pygame.K_ESCAPE:                 #按esc退出
+            self.text_save()
             sys.exit()
         elif event.key == pygame.K_SPACE:              #摁空格发射子弹
             self._fire_bullet()
@@ -186,6 +189,17 @@ class AlienInvasion:
         self.ship.center_ship()
 
         pygame.mouse.set_visible(False)   
+    
+    def text_save(self):
+        file = open('highest.txt','w')
+        file.write(str(self.stats.high_score))
+        file.close()
+    
+    def text_read(self):
+        file = open('highest.txt','r')
+        self.stats.high_score = int(file.read())
+        self.sb.prep_high_score()
+        file.close()
 
 if __name__ == '__main__':
     ai = AlienInvasion()
