@@ -19,7 +19,7 @@ class Setting:
 
     def difficulty(self,speed_up):
         self.alien_speed = 0.15*speed_up
-        self.bullet_speed = 2.55
+        self.bullet_speed = 2.5
         self.ship_speed = 2.0
         self.aim = 10*speed_up
         self.alien_allowed = 3*speed_up
